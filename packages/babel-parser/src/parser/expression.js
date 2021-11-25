@@ -73,6 +73,7 @@ import { cloneIdentifier } from "./node";
 
 /*::
 import type { SourceType } from "../options";
+declare var invariant;
 */
 
 const invalidHackPipeBodies = new Map([
@@ -315,6 +316,10 @@ export default class ExpressionParser extends LValParser {
         }
         if (refExpressionErrors.shorthandAssign >= startPos) {
           refExpressionErrors.shorthandAssign = -1; // reset because shorthand default was used correctly
+        }
+        if (refExpressionErrors.privateKey >= startPos) {
+          this.checkDestructuringPrivate(refExpressionErrors);
+          refExpressionErrors.privateKey = -1; // reset because `({ #x: x })` is an assignable pattern
         }
       } else {
         node.left = left;
@@ -830,13 +835,14 @@ export default class ExpressionParser extends LValParser {
 
     let node = this.startNodeAt(startPos, startLoc);
     node.callee = base;
+    const { maybeAsyncArrow, optionalChainMember } = state;
 
-    if (state.maybeAsyncArrow) {
+    if (maybeAsyncArrow) {
       this.expressionScope.enter(newAsyncArrowScope());
       refExpressionErrors = new ExpressionErrors();
     }
 
-    if (state.optionalChainMember) {
+    if (optionalChainMember) {
       node.optional = optional;
     }
 
@@ -851,10 +857,12 @@ export default class ExpressionParser extends LValParser {
         refExpressionErrors,
       );
     }
-    this.finishCallExpression(node, state.optionalChainMember);
+    this.finishCallExpression(node, optionalChainMember);
 
-    if (state.maybeAsyncArrow && this.shouldParseAsyncArrow() && !optional) {
+    if (maybeAsyncArrow && this.shouldParseAsyncArrow() && !optional) {
+      /*:: invariant(refExpressionErrors != null) */
       state.stop = true;
+      this.checkDestructuringPrivate(refExpressionErrors);
       this.expressionScope.validateAsPattern();
       this.expressionScope.exit();
       node = this.parseAsyncArrowFromCallExpression(
@@ -862,7 +870,7 @@ export default class ExpressionParser extends LValParser {
         node,
       );
     } else {
-      if (state.maybeAsyncArrow) {
+      if (maybeAsyncArrow) {
         this.checkExpressionErrors(refExpressionErrors, true);
         this.expressionScope.exit();
       }
@@ -1719,6 +1727,7 @@ export default class ExpressionParser extends LValParser {
       this.shouldParseArrow(exprList) &&
       (arrowNode = this.parseArrow(arrowNode))
     ) {
+      this.checkDestructuringPrivate(refExpressionErrors);
       this.expressionScope.validateAsPattern();
       this.expressionScope.exit();
       this.parseArrowExpression(arrowNode, exprList, false);
@@ -1993,7 +2002,7 @@ export default class ExpressionParser extends LValParser {
     let isGenerator = this.eat(tt.star);
     this.parsePropertyNamePrefixOperator(prop);
     const containsEsc = this.state.containsEsc;
-    const key = this.parsePropertyName(prop);
+    const key = this.parsePropertyName(prop, refExpressionErrors);
 
     if (!isGenerator && !containsEsc && this.maybeAsyncOrAccessorProp(prop)) {
       const keyName = key.name;
@@ -2195,8 +2204,12 @@ export default class ExpressionParser extends LValParser {
     return node;
   }
 
+  // https://tc39.es/ecma262/#prod-PropertyName
+  // when refExpressionErrors presents, it will parse private name
+  // and record the position of the first private name
   parsePropertyName(
     prop: N.ObjectOrClassMember | N.ClassMember | N.TsNamedTypeElementBase,
+    refExpressionErrors?: ?ExpressionErrors,
   ): N.Expression | N.Identifier {
     if (this.eat(tt.bracketL)) {
       (prop: $FlowSubtype<N.ObjectOrClassMember>).computed = true;
@@ -2225,8 +2238,14 @@ export default class ExpressionParser extends LValParser {
             break;
           case tt.privateName: {
             // the class private key has been handled in parseClassElementName
-            const privateKeyPos = this.state.start + 1;
-            this.raise(privateKeyPos, Errors.UnexpectedPrivateField);
+            const privateKeyPos = this.state.start;
+            if (refExpressionErrors != null) {
+              if (refExpressionErrors.privateKey === -1) {
+                refExpressionErrors.privateKey = privateKeyPos;
+              }
+            } else {
+              this.raise(privateKeyPos, Errors.UnexpectedPrivateField);
+            }
             key = this.parsePrivateName();
             break;
           }
