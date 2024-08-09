@@ -6,6 +6,7 @@ import {
   isNewExpression,
 } from "@babel/types";
 import type * as t from "@babel/types";
+import { TokenContext } from "../node/index.ts";
 
 export function UnaryExpression(this: Printer, node: t.UnaryExpression) {
   const { operator } = node;
@@ -237,16 +238,17 @@ export function ExpressionStatement(
   this: Printer,
   node: t.ExpressionStatement,
 ) {
+  this.tokenContext |= TokenContext.expressionStatement;
   this.print(node.expression, node);
   this.semicolon();
 }
 
 export function AssignmentPattern(this: Printer, node: t.AssignmentPattern) {
   this.print(node.left, node);
-  // @ts-expect-error todo(flow->ts) property present on some of the types in union but not all
-  if (node.left.optional) this.token("?");
-  // @ts-expect-error todo(flow->ts) property present on some of the types in union but not all
-  this.print(node.left.typeAnnotation, node);
+  if (node.left.type === "Identifier") {
+    if (node.left.optional) this.token("?");
+    this.print(node.left.typeAnnotation, node);
+  }
   this.space();
   this.token("=");
   this.space();

@@ -244,6 +244,7 @@ function createWorker(useWorker) {
     return require("./babel-worker.cjs");
   }
   const worker = new JestWorker(require.resolve("./babel-worker.cjs"), {
+    enableWorkerThreads: true,
     numWorkers,
     exposedMethods: ["transform"],
   });
@@ -733,6 +734,7 @@ if (bool(process.env.BABEL_8_BREAKING)) {
     "packages/babel-plugin-bugfix-v8-spread-parameters-in-optional-chaining",
     "packages/babel-plugin-bugfix-v8-static-class-fields-redefine-readonly",
     "packages/babel-plugin-bugfix-safari-id-destructuring-collision-in-function-expression",
+    "packages/babel-plugin-bugfix-safari-class-field-initializer-scope",
   ].map(src => ({
     src,
     format: USE_ESM ? "esm" : "cjs",
@@ -835,7 +837,7 @@ gulp.task("build-vendor", async () => {
       {
         // Remove the node: prefix from imports, so that it works in old Node.js version
         // TODO(Babel 8): This can be removed.
-        transform: code => code.replace(/(?<=from ["'"])node:/g, ""),
+        transform: code => code.replace(/(?<=from ["'])node:/g, ""),
       },
     ],
   });
@@ -942,7 +944,10 @@ gulp.task(
 );
 
 function watch() {
-  gulp.watch(defaultSourcesGlob, gulp.task("build-no-bundle-watch"));
+  gulp.watch(
+    defaultSourcesGlob,
+    gulp.series("build-no-bundle-watch", "build-cjs-bundles")
+  );
   gulp.watch(babelStandalonePluginConfigGlob, gulp.task("generate-standalone"));
   gulp.watch(buildTypingsWatchGlob, gulp.task("generate-type-helpers"));
   gulp.watch(

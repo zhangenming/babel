@@ -1,6 +1,6 @@
 {
   "name": "@babel/preset-env",
-  "version": "7.24.8",
+  "version": "7.25.3",
   "description": "A Babel preset for each environment.",
   "author": "The Babel Team (https://babel.dev/team)",
   "homepage": "https://babel.dev/docs/en/next/babel-preset-env",
@@ -21,6 +21,7 @@
     "@babel/helper-plugin-utils": "workspace:^",
     "@babel/helper-validator-option": "workspace:^",
     "@babel/plugin-bugfix-firefox-class-in-computed-class-key": "workspace:^",
+    "@babel/plugin-bugfix-safari-class-field-initializer-scope": "workspace:^",
     "@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression": "workspace:^",
     "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining": "workspace:^",
     "@babel/plugin-bugfix-v8-static-class-fields-redefine-readonly": "workspace:^",
@@ -55,6 +56,7 @@
     "@babel/plugin-transform-destructuring": "workspace:^",
     "@babel/plugin-transform-dotall-regex": "workspace:^",
     "@babel/plugin-transform-duplicate-keys": "workspace:^",
+    "@babel/plugin-transform-duplicate-named-capturing-groups-regex": "workspace:^",
     "@babel/plugin-transform-dynamic-import": "workspace:^",
     "@babel/plugin-transform-exponentiation-operator": "workspace:^",
     "@babel/plugin-transform-export-namespace-from": "workspace:^",
@@ -93,7 +95,7 @@
     "@babel/plugin-transform-unicode-sets-regex": "workspace:^",
     "@babel/preset-modules": "0.1.6-no-external-plugins",
     "babel-plugin-polyfill-corejs2": "condition:BABEL_8_BREAKING ? : ^0.4.10 (peer:@babel/core) (esm:default)",
-    "babel-plugin-polyfill-corejs3": "^0.10.4",
+    "babel-plugin-polyfill-corejs3": "^0.10.6",
     "babel-plugin-polyfill-regenerator": "condition:BABEL_8_BREAKING ? : ^0.6.1 (peer:@babel/core) (esm:default)",
     "core-js-compat": "^3.37.1",
     "semver": "condition:BABEL_8_BREAKING ? ^7.3.4 : ^6.3.1"

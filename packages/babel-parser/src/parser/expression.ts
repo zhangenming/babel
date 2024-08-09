@@ -333,9 +333,7 @@ export default abstract class ExpressionParser extends LValParser {
 
       this.next();
       node.right = this.parseMaybeAssign();
-      this.checkLVal(left, {
-        in: this.finishNode(node, "AssignmentExpression"),
-      });
+      this.checkLVal(left, this.finishNode(node, "AssignmentExpression"));
       // @ts-expect-error todo(flow->ts) improve node types
       return node;
     } else if (ownExpressionErrors) {
@@ -606,7 +604,7 @@ export default abstract class ExpressionParser extends LValParser {
     const startLoc = this.state.startLoc;
     const isAwait = this.isContextual(tt._await);
 
-    if (isAwait && this.isAwaitAllowed()) {
+    if (isAwait && this.recordAwaitIfAllowed()) {
       this.next();
       const expr = this.parseAwait(startLoc);
       if (!sawUnary) this.checkExponentialAfterUnary(expr);
@@ -676,9 +674,10 @@ export default abstract class ExpressionParser extends LValParser {
   ): N.Expression {
     if (update) {
       const updateExpressionNode = node as Undone<N.UpdateExpression>;
-      this.checkLVal(updateExpressionNode.argument, {
-        in: this.finishNode(updateExpressionNode, "UpdateExpression"),
-      });
+      this.checkLVal(
+        updateExpressionNode.argument,
+        this.finishNode(updateExpressionNode, "UpdateExpression"),
+      );
       return node;
     }
 
@@ -691,9 +690,7 @@ export default abstract class ExpressionParser extends LValParser {
       node.prefix = false;
       node.argument = expr;
       this.next();
-      this.checkLVal(expr, {
-        in: (expr = this.finishNode(node, "UpdateExpression")),
-      });
+      this.checkLVal(expr, (expr = this.finishNode(node, "UpdateExpression")));
     }
     return expr;
   }
@@ -2665,12 +2662,13 @@ export default abstract class ExpressionParser extends LValParser {
     // 1. https://tc39.es/ecma262/#prod-FormalParameters
     const formalParameters = { type: "FormalParameters" } as const;
     for (const param of node.params) {
-      this.checkLVal(param, {
-        in: formalParameters,
-        binding: BindingFlag.TYPE_VAR,
+      this.checkLVal(
+        param,
+        formalParameters,
+        BindingFlag.TYPE_VAR,
         checkClashes,
         strictModeChanged,
-      });
+      );
     }
   }
 
@@ -2869,12 +2867,18 @@ export default abstract class ExpressionParser extends LValParser {
     }
   }
 
-  isAwaitAllowed(): boolean {
-    if (this.prodParam.hasAwait) return true;
-    if (this.options.allowAwaitOutsideFunction && !this.scope.inFunction) {
-      return true;
+  // Returns wether `await` is allowed or not in this context, and if it is
+  // keeps track of it to determine whether a module uses top-level await.
+  recordAwaitIfAllowed(): boolean {
+    const isAwaitAllowed =
+      this.prodParam.hasAwait ||
+      (this.options.allowAwaitOutsideFunction && !this.scope.inFunction);
+
+    if (isAwaitAllowed && !this.scope.inFunction) {
+      this.state.hasTopLevelAwait = true;
     }
-    return false;
+
+    return isAwaitAllowed;
   }
 
   // Parses await expression inside async function.
