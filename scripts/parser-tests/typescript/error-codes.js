@@ -59,6 +59,7 @@ export default [
   "TS1142", // Line break not permitted here.
   "TS1144", // '{' or ';' expected.
   "TS1145", // '{' or JSX element expected.
+  "TS1147", // Import declarations in a namespace cannot reference a module.
   "TS1155", // 'const' declarations must be initialized.
   "TS1156", // 'const' declarations can only be declared inside a block.
   "TS1160", // Unterminated template literal.
@@ -95,6 +96,7 @@ export default [
   "TS1308", // 'await' expression is only allowed within an async function.
   "TS1312", // '=' can only be used in an object literal property inside a destructuring assignment.
   "TS1317", // A parameter property cannot be declared using a rest parameter.
+  "TS1319", // A default export can only be used in an ECMAScript-style module.
   "TS1344", // A label is not allowed here.
   "TS1347", // 'use strict' directive cannot be used with non-simple parameter list.
   "TS1384", // A 'new' expression with type arguments must always be followed by a parenthesized argument list.
@@ -121,14 +123,16 @@ export default [
   //"TS2393", // Duplicate function implementation.
   "TS2396", // Duplicate identifier 'arguments'. Compiler uses 'arguments' to initialize rest parameters.
   // "TS2440", // Import declaration conflicts with local declaration of '{0}'.
-  // "TS2451", // Cannot redeclare block-scoped variable '{0}'.
+  "TS2451", // Cannot redeclare block-scoped variable '{0}'.
   "TS2452", // An enum member cannot have a numeric name.
+  "TS2480", // 'let' is not allowed to be used as a name in 'let' or 'const' declarations.
   "TS2492", // Cannot redeclare identifier '{0}' in catch clause.
   "TS2499", // An interface can only extend an identifier/qualified-name with optional type arguments.
   "TS2523", // 'yield' expressions cannot be used in a parameter initializer.
   "TS2524", // 'await' expressions cannot be used in a parameter initializer.
   // "TS2552", // Cannot find name 'foo'. Did you mean 'zoo'?
   "TS2566", // A rest element cannot have a property name.
+  "TS2567", // Enum declarations can only merge with namespace or other enum declarations.
   //"TS2580",
   "TS2481", // Cannot initialize outer scoped variable '{0}' in the same scope as block scoped declaration '{0}'.
   // "TS2567", // Enum declarations can only merge with namespace or other enum declarations.
@@ -157,4 +161,5 @@ export default [
   "TS17000", // JSX attributes must only be assigned a non-empty 'expression'.
   "TS17008", // JSX element '{0}' has no corresponding closing tag.
   "TS17012", // '{0}' is not a valid meta-property for keyword '{1}'. Did you mean '{2}'?
+  "TS17019", // '!' at the end of a type is not valid TypeScript syntax. Did you mean to write '{0}'?
 ];
