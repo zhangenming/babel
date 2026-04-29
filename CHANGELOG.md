@@ -25,6 +25,57 @@ This file contains the changelog starting from v8.0.0-alpha.0.
 
 <!-- DO NOT CHANGE THESE COMMENTS -->
 <!-- insert-new-changelog-here -->
+## v8.0.0-rc.4 (2026-04-29)
+
+#### :eyeglasses: Spec Compliance
+* `babel-parser`
+  * [#17954](https://github.com/babel/babel/pull/17954) fix(parser): ts parser small fixes ([@JLHwung](https://github.com/JLHwung))
+  * [#17923](https://github.com/babel/babel/pull/17923) Support flow extends bound ([@JLHwung](https://github.com/JLHwung))
+  * [#17888](https://github.com/babel/babel/pull/17888) TS parser small fixes ([@JLHwung](https://github.com/JLHwung))
+  * [#17865](https://github.com/babel/babel/pull/17865) Fix(parser): flow parser small fixes ([@JLHwung](https://github.com/JLHwung))
+* `babel-generator`, `babel-parser`, `babel-plugin-transform-spread`, `babel-types`
+  * [#17871](https://github.com/babel/babel/pull/17871) Disallow super call after new ([@JLHwung](https://github.com/JLHwung))
+
+#### :boom: Breaking Change
+* `babel-cli`, `babel-helper-transform-fixture-test-runner`, `babel-helpers`, `babel-node`, `babel-register`
+  * [#17938](https://github.com/babel/babel/pull/17938) Bundle more packages ([@JLHwung](https://github.com/JLHwung))
+* `babel-traverse`
+  * [#17937](https://github.com/babel/babel/pull/17937) Remove `Scope#buildUndefinedNode` ([@nicolo-ribaudo](https://github.com/nicolo-ribaudo))
+* `babel-helper-wrap-function`, `babel-plugin-transform-block-scoping`, `babel-plugin-transform-regenerator`, `babel-traverse`
+  * [#17907](https://github.com/babel/babel/pull/17907) Remove `NodePath#toComputedKey` ([@liuxingbaoyu](https://github.com/liuxingbaoyu))
+* `babel-plugin-external-helpers`, `babel-template`, `babel-traverse`
+  * [#17830](https://github.com/babel/babel/pull/17830) Replace remaining whitelist/blacklist with inclusive alternatives ([@stuckvgn](https://github.com/stuckvgn))
+* `babel-plugin-transform-property-mutators`, `babel-standalone`
+  * [#17882](https://github.com/babel/babel/pull/17882) Remove `@babel/plugin-transform-property-mutators` ([@liuxingbaoyu](https://github.com/liuxingbaoyu))
+
+#### :bug: Bug Fix
+* `babel-register`
+  * [#17928](https://github.com/babel/babel/pull/17928) fix(register): skip hook for ignored files ([@JLHwung](https://github.com/JLHwung))
+  * [#17915](https://github.com/babel/babel/pull/17915) Fix thread synchronization issues in `@babel/register` ([@liuxingbaoyu](https://github.com/liuxingbaoyu))
+* `babel-helper-create-class-features-plugin`, `babel-plugin-proposal-decorators`
+  * [#17947](https://github.com/babel/babel/pull/17947) Fix decorators interaction with abstract/declare fields ([@nicolo-ribaudo](https://github.com/nicolo-ribaudo))
+  * [#17931](https://github.com/babel/babel/pull/17931) fix(decorators): replace super within all removed static elements ([@JLHwung](https://github.com/JLHwung))
+* Other
+  * [#17940](https://github.com/babel/babel/pull/17940) fix(eslint-plugin): Cleanup references to removed rules ([@JLHwung](https://github.com/JLHwung))
+* `babel-core`
+  * [#17933](https://github.com/babel/babel/pull/17933) Update Babel 8 config item brand ([@JLHwung](https://github.com/JLHwung))
+* `babel-types`
+  * [#17885](https://github.com/babel/babel/pull/17885) Make `ArrowFunctionExpression.expression` optional ([@liuxingbaoyu](https://github.com/liuxingbaoyu))
+
+#### :nail_care: Polish
+* `babel-register`
+  * [#17941](https://github.com/babel/babel/pull/17941) Uninstall sms in register revert ([@JLHwung](https://github.com/JLHwung))
+* `babel-parser`
+  * [#17902](https://github.com/babel/babel/pull/17902) polish(parser): improve ImportExpression error recovery ([@JLHwung](https://github.com/JLHwung))
+
+#### :memo: Documentation
+* [#17952](https://github.com/babel/babel/pull/17952) docs: fix exponentiation fixture links ([@cyphercodes](https://github.com/cyphercodes))
+
+#### :house: Internal
+* Other
+  * [#17944](https://github.com/babel/babel/pull/17944) refactor(eslint): remove compat layers for ESLint < 9 ([@JLHwung](https://github.com/JLHwung))
+* `babel-core`, `babel-generator`
+  * [#17880](https://github.com/babel/babel/pull/17880) chore: Remove unused merging source map code ([@liuxingbaoyu](https://github.com/liuxingbaoyu))
 ## v8.0.0-rc.3 (2026-03-16)
 
 #### :eyeglasses: Spec Compliance
