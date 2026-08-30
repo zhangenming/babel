@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import tsRewriteRelativeImportExtensions from "../../src/helpers/tsRewriteRelativeImportExtensions.ts";
 
 describe("tsRewriteRelativeImportExtensions", () => {
